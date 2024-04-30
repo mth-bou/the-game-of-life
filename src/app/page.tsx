@@ -28,7 +28,7 @@ const patterns: Pattern = {
     ]
 }
 
-const computeNextGrid = (grid: boolean[][]): boolean[][] => {
+/*const computeNextGrid = (grid: boolean[][]): boolean[][] => {
     const nextGrid = generateEmptyGrid();
 
     for (let i = 0; i < grid.length; i++) {
@@ -60,13 +60,59 @@ const computeNextGrid = (grid: boolean[][]): boolean[][] => {
     }
 
     return nextGrid;
-}
+}*/
 
 const App: React.FC = () => {
     // Exemple initial de grille
     const [currentGrid, setCurrentGrid] = useState<boolean[][]>(patterns.empty);
     const [running, setRunning] = useState<boolean>(false);
     const [intervalMs, setIntervalMs] = useState<number>(100);
+    const [generationCount, setGenerationCount] = useState<number>(0);
+
+    const computeNextGrid = useCallback(() => {
+        setCurrentGrid(grid => {
+            const nextGrid = generateEmptyGrid();
+
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
+
+                    let neighbors = 0;
+
+                    for (let di = -1; di <= 1; di++) {
+                        for (let dj = -1; dj <= 1; dj++) {
+                            if (di === 0 && dj === 0) continue;
+
+                            const ni = i + di;
+                            const nj = j + dj;
+
+                            if (ni >= 0 && ni < numRows && nj >= 0 && nj < numCols) {
+                                neighbors += grid[ni][nj] ? 1 : 0;
+                            }
+                        }
+                    }
+
+                    if (neighbors < 2 || neighbors > 3) {
+                        nextGrid[i][j] = false;
+                    } else if (grid[i][j] && (neighbors === 2 || neighbors === 3)) {
+                        nextGrid[i][j] = true;
+                    } else if (!grid[i][j] && neighbors === 3) {
+                        nextGrid[i][j] = true;
+                    }
+                }
+            }
+
+            return nextGrid;
+        });
+        setGenerationCount(g => g + 1);
+    }, []);
+
+    useEffect(() => {
+        let timerId: NodeJS.Timeout;
+        if (running) {
+            timerId = setTimeout(computeNextGrid, intervalMs);
+        }
+        return () => clearTimeout(timerId);
+    }, [running, intervalMs, currentGrid, computeNextGrid]);
 
     const handleSelectPattern = (patternKey: string) => {
         const pattern = patterns[patternKey];
@@ -87,32 +133,14 @@ const App: React.FC = () => {
         }
 
         setCurrentGrid(newGrid);
+        setRunning(false);
+        setGenerationCount(0);
     }
-
-    const runSimulation = useCallback(() => {
-        if (!running) return;
-
-        setCurrentGrid(g => computeNextGrid(g));
-
-        setTimeout(runSimulation, intervalMs);
-
-    }, [running, intervalMs]);
-
-    useEffect(() => {
-        let timer: NodeJS.Timeout;
-        if (running) {
-            timer = setTimeout(runSimulation, intervalMs);
-        }
-        return () => {
-            if (timer) clearTimeout(timer);
-        }
-    }, [running, intervalMs, runSimulation]);
 
     return (
         <div>
             <button onClick={() => {
                 setRunning(!running);
-                if (!running) runSimulation();
             }}>
                 {running ? 'Stop' : 'Start'}
             </button>
@@ -121,7 +149,8 @@ const App: React.FC = () => {
                     <option key={key} value={key}>{key}</option>
                 ))}
             </select>
-            <Grid grid={currentGrid} />
+            <div>Génération : {generationCount}</div>
+            <Grid grid={currentGrid}/>
         </div>
     );
 }
