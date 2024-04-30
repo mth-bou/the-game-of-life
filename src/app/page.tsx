@@ -98,9 +98,22 @@ const App: React.FC = () => {
 
     }, [running, intervalMs]);
 
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (running) {
+            timer = setTimeout(runSimulation, intervalMs);
+        }
+        return () => {
+            if (timer) clearTimeout(timer);
+        }
+    }, [running, intervalMs, runSimulation]);
+
     return (
         <div>
-            <button onClick={() => { setRunning(!running); if (!running) { runSimulation(); }}}>
+            <button onClick={() => {
+                setRunning(!running);
+                if (!running) runSimulation();
+            }}>
                 {running ? 'Stop' : 'Start'}
             </button>
             <select onChange={(e) => handleSelectPattern(e.target.value)}>
