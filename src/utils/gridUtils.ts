@@ -1,3 +1,5 @@
+import { Patterns } from '@/lib/patterns';
+
 // Définition des dimensions globales de la grille pour un accès facile
 export const numRows = 40;
 export const numCols = 80;
@@ -20,3 +22,12 @@ export const generateGridFromPattern = (pattern: boolean[][]): boolean[][] => {
     }
     return newGrid;
 };
+
+export const findPatternByKey = (patternKey: string, patterns: Patterns): boolean[][] | null => {
+    for (const category of Object.values(patterns)) {
+        if (category[patternKey]) {
+            return category[patternKey];
+        }
+    }
+    return null;
+}

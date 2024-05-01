@@ -1,12 +1,14 @@
 import React, { useCallback } from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { patterns } from "@/lib/patterns";
+import { Select, SelectContent, SelectGroup, SelectLabel, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getPatterns } from "@/lib/patterns";
 
 type PatternSelectorProps = {
     onSelectPattern: (selectedKey: string) => void;
 };
 
 const PatternSelector = ({ onSelectPattern }: PatternSelectorProps) => {
+
+    const patterns = getPatterns();
 
     const handleSelectPattern = useCallback((value: string) => {
         onSelectPattern(value);
@@ -18,11 +20,14 @@ const PatternSelector = ({ onSelectPattern }: PatternSelectorProps) => {
                 <SelectValue placeholder="Select a pattern"/>
             </SelectTrigger>
             <SelectContent>
-                <SelectGroup>
-                    {Object.keys(patterns).map(key => (
-                        <SelectItem key={key} value={key}>{key}</SelectItem>
-                    ))}
-                </SelectGroup>
+                {Object.entries(patterns).map(([category, categoryPatterns]) => (
+                    <SelectGroup key={category.charAt(0).toUpperCase() + category.slice(1)}>
+                        <SelectLabel>{category}</SelectLabel>
+                        {Object.keys(categoryPatterns).map(key => (
+                            <SelectItem key={key} value={key}>{key}</SelectItem>
+                        ))}
+                    </SelectGroup>
+                ))}
             </SelectContent>
         </Select>
     )

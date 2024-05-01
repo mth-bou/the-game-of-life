@@ -3,11 +3,8 @@
 import React, { useState } from "react";
 import "./../../public/app.css";
 import Grid from "@/components/Grid";
-import SetSimulationSpeedSlider from "@/components/SetSimulationSpeedSlider";
-import { Button } from "@/components/ui/button";
 import useGrid from "@/hooks/useGrid";
 import useSimulationTimer from "@/hooks/useSimulationTimer";
-import PatternSelector from "@/components/PatternSelector";
 import ControlsPanel from "@/components/ControlsPanel";
 
 

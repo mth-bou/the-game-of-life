@@ -1,11 +1,19 @@
 import { useCallback, useState } from "react";
 import { generateGridFromPattern, generateEmptyGrid, numRows, numCols } from "@/utils/gridUtils";
-import { patterns } from "@/lib/patterns";
+import { getPatterns } from "@/lib/patterns";
+import { findPatternByKey } from "@/utils/gridUtils";
 
 const useGrid = (initialPatternKey: string) => {
-    const [grid, setGrid] = useState(() => generateGridFromPattern(patterns[initialPatternKey]));
     const [generationCount, setGenerationCount] = useState(0);
     const [selectedPatternKey, setSelectedPatternKey] = useState(initialPatternKey);
+
+    const patterns = getPatterns();
+
+    // utilisation de la fonction utilitaire pour trouver le pattern selon la clé et le stocker dans l'état
+    const [grid, setGrid] = useState(() => {
+        const initialPattern = findPatternByKey(initialPatternKey, patterns);
+        return generateGridFromPattern(initialPattern ?? generateEmptyGrid());
+    });
 
     const toggleCellState = useCallback((row: number, col: number) => {
         setGrid(currentGrid => {
@@ -19,8 +27,14 @@ const useGrid = (initialPatternKey: string) => {
     }, []);
 
     const resetGrid = useCallback(() => {
-        if (selectedPatternKey && patterns[selectedPatternKey]) {
-            setGrid(generateGridFromPattern(patterns[selectedPatternKey]));
+        const pattern = findPatternByKey(selectedPatternKey, patterns);
+
+        if (pattern) {
+            setGrid(generateGridFromPattern(pattern));
+            setGenerationCount(0);
+        } else {
+            console.error("Pattern not found: ", selectedPatternKey);
+            setGrid(generateEmptyGrid());
             setGenerationCount(0);
         }
 
@@ -64,14 +78,25 @@ const useGrid = (initialPatternKey: string) => {
     }, []);
 
     const handleSelectPattern = useCallback((patternKey: string) => {
-        const pattern = patterns[patternKey];
-        if (!pattern) {
-            console.error("Selected pattern is not defined:", patternKey);
-            return;
+        let selectedPattern = null;
+
+        // Parcourir toutes les catégories pour trouver le pattern
+        for (const category of Object.values(patterns)) {
+            if (category[patternKey]) {
+                selectedPattern = category[patternKey];
+                break;
+            }
         }
-        setGrid(generateGridFromPattern(pattern));
-        setSelectedPatternKey(patternKey);
-        setGenerationCount(0);
+
+        if (!selectedPattern) {
+            console.error("Selected pattern is not defined:", patternKey);
+            return; // Sortie anticipée si le motif n'est pas trouvé
+        }
+
+        // Si le pattern est trouvé, mettre à jour la grille avec ce pattern
+        setGrid(generateGridFromPattern(selectedPattern));
+        setSelectedPatternKey(patternKey); // Mise à jour de la clé du pattern sélectionné
+        setGenerationCount(0); // Réinitialiser le compte des générations
     }, []);
 
     return { grid, setGrid, toggleCellState, resetGrid, computeNextGrid, generationCount, handleSelectPattern };
