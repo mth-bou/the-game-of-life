@@ -1,9 +1,11 @@
 "use client";
 
-import React, {useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./../../public/app.css";
 import Grid from "@/components/Grid";
 import SetSimulationSpeedSlider from "@/components/SetSimulationSpeedSlider";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Pattern {
     [key: string]: boolean[][];
@@ -142,23 +144,30 @@ const App: React.FC = () => {
 
     return (
         <div>
-            <button onClick={() => {
+            <Button size="sm" onClick={() => {
                 setRunning(!running);
             }}>
                 {running ? 'Stop' : 'Start'}
-            </button>
-            <button onClick={resetGrid}>
+            </Button>
+            <Button size="sm" onClick={resetGrid}>
                 Reset
-            </button>
-            <select onChange={(e) => handleSelectPattern(e.target.value)}>
-                {Object.keys(patterns).map(key => (
-                    <option key={key} value={key}>{key}</option>
-                ))}
-            </select>
-            <SetSimulationSpeedSlider onValueChange={handleChangeSpeed} />
+            </Button>
+            <Select onValueChange={(value) => handleSelectPattern(value)}>
+                <SelectTrigger className="w-[100px]">
+                    <SelectValue placeholder="Select a pattern" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        {Object.keys(patterns).map(key => (
+                            <SelectItem key={key} value={key}>{key}</SelectItem>
+                        ))}
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+            <SetSimulationSpeedSlider onValueChange={handleChangeSpeed}/>
             <div>Vitesse : {generationsPerSecond.toFixed(2)} generation / s</div>
             <div>Génération : {generationCount}</div>
-            <Grid grid={currentGrid} toggleCellState={toggleCellState} />
+            <Grid grid={currentGrid} toggleCellState={toggleCellState}/>
         </div>
     );
 }
