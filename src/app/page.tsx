@@ -3,6 +3,7 @@
 import React, {useState, useEffect, useCallback} from "react";
 import "./../../public/app.css";
 import Grid from "@/components/Grid";
+import SetSimulationSpeedSlider from "@/components/SetSimulationSpeedSlider";
 
 interface Pattern {
     [key: string]: boolean[][];
@@ -32,8 +33,17 @@ const App: React.FC = () => {
     // Exemple initial de grille
     const [currentGrid, setCurrentGrid] = useState<boolean[][]>(patterns.empty);
     const [running, setRunning] = useState<boolean>(false);
-    const [intervalMs, setIntervalMs] = useState<number>(100);
+    const [intervalMs, setIntervalMs] = useState<number>(1000);
     const [generationCount, setGenerationCount] = useState<number>(0);
+
+    // Calcul de générations par seconde
+    const generationsPerSecond = 1000 / intervalMs;
+
+    const handleChangeSpeed = (values: number[]) => {
+        const value = values[0];
+        const newIntervalMs = 2000 - 19 * value;
+        setIntervalMs(newIntervalMs);
+    };
 
     const toggleCellState = (row: number, col: number) => {
 
@@ -102,10 +112,10 @@ const App: React.FC = () => {
     useEffect(() => {
         let timerId: NodeJS.Timeout;
         if (running) {
-            timerId = setTimeout(computeNextGrid, intervalMs);
+            timerId = setInterval(computeNextGrid, intervalMs);
         }
-        return () => clearTimeout(timerId);
-    }, [running, intervalMs, currentGrid, computeNextGrid]);
+        return () => clearInterval(timerId);
+    }, [running, intervalMs, computeNextGrid]);
 
     const handleSelectPattern = (patternKey: string) => {
         const pattern = patterns[patternKey];
@@ -145,6 +155,8 @@ const App: React.FC = () => {
                     <option key={key} value={key}>{key}</option>
                 ))}
             </select>
+            <SetSimulationSpeedSlider onValueChange={handleChangeSpeed} />
+            <div>Vitesse : {generationsPerSecond.toFixed(2)} generation / s</div>
             <div>Génération : {generationCount}</div>
             <Grid grid={currentGrid} toggleCellState={toggleCellState} />
         </div>
