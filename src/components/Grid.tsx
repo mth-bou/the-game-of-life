@@ -3,11 +3,12 @@ import "@/components/Grid.css";
 
 interface GridProps {
     grid: boolean[][];
+    toggleCellState: (row: number, col: number) => void;
 }
 
-const Grid = ({grid}: GridProps) => {
+const Grid = ({ grid, toggleCellState }: GridProps) => {
     const [cellSize, setCellSize] =
-        useState<{ width: number, height: number }>({width: 20, height: 20});
+        useState<{ width: number, height: number }>({width: 0, height: 0});
 
     useEffect(() => {
         const updateSize = () => {
@@ -18,8 +19,8 @@ const Grid = ({grid}: GridProps) => {
             setCellSize({width, height});
         }
 
-        window.addEventListener('resize', updateSize);
         updateSize();
+        window.addEventListener('resize', updateSize);
 
         return () => {
             window.removeEventListener('resize', updateSize);
@@ -36,12 +37,12 @@ const Grid = ({grid}: GridProps) => {
                 row.map((cell, j) => (
                     <div
                         key={`${i}-${j}`}
+                        onClick={() => toggleCellState(i, j)}
                         className={`cell ${cell ? 'alive' : ''}`}
                         style={{width: cellSize.width, height: cellSize.height}}>
                     </div>
                 ))
-            ))
-            }
+            ))}
         </div>
     );
 };

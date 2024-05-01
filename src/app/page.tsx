@@ -28,46 +28,39 @@ const patterns: Pattern = {
     ]
 }
 
-/*const computeNextGrid = (grid: boolean[][]): boolean[][] => {
-    const nextGrid = generateEmptyGrid();
-
-    for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[i].length; j++) {
-
-            let neighbors = 0;
-
-            for (let di = -1; di <= 1; di++) {
-                for (let dj = -1; dj <= 1; dj++) {
-                    if (di === 0 && dj === 0) continue;
-
-                    const ni = i + di;
-                    const nj = j + dj;
-
-                    if (ni >= 0 && ni < numRows && nj >= 0 && nj < numCols) {
-                        neighbors += grid[ni][nj] ? 1 : 0;
-                    }
-                }
-            }
-
-            if (neighbors < 2 || neighbors > 3) {
-                nextGrid[i][j] = false;
-            } else if (grid[i][j] && (neighbors === 2 || neighbors === 3)) {
-                nextGrid[i][j] = true;
-            } else if (!grid[i][j] && neighbors === 3) {
-                nextGrid[i][j] = true;
-            }
-        }
-    }
-
-    return nextGrid;
-}*/
-
 const App: React.FC = () => {
     // Exemple initial de grille
     const [currentGrid, setCurrentGrid] = useState<boolean[][]>(patterns.empty);
     const [running, setRunning] = useState<boolean>(false);
     const [intervalMs, setIntervalMs] = useState<number>(100);
     const [generationCount, setGenerationCount] = useState<number>(0);
+
+    const toggleCellState = (row: number, col: number) => {
+
+        setCurrentGrid(currentGrid => {
+            const newGrid = currentGrid.map((currentRow, rowIndex) => {
+                if (rowIndex === row) {
+                    return currentRow.map((cell, colIndex) => {
+                        if (colIndex === col) {
+                            return !cell; // Inverse l'état de la cellule
+                        } else {
+                            return cell; // Garde l'état de la cellule inchangé
+                        }
+                    });
+                } else {
+                    return [...currentRow]; // Retourne une copie de la ligne non modifiée
+                }
+            });
+            return newGrid;
+        });
+
+    }
+
+    const resetGrid = () => {
+        setRunning(false);
+        setGenerationCount(0);
+        setCurrentGrid(generateEmptyGrid);
+    }
 
     const computeNextGrid = useCallback(() => {
         setCurrentGrid(grid => {
@@ -144,13 +137,16 @@ const App: React.FC = () => {
             }}>
                 {running ? 'Stop' : 'Start'}
             </button>
+            <button onClick={resetGrid}>
+                Reset
+            </button>
             <select onChange={(e) => handleSelectPattern(e.target.value)}>
                 {Object.keys(patterns).map(key => (
                     <option key={key} value={key}>{key}</option>
                 ))}
             </select>
             <div>Génération : {generationCount}</div>
-            <Grid grid={currentGrid}/>
+            <Grid grid={currentGrid} toggleCellState={toggleCellState} />
         </div>
     );
 }
