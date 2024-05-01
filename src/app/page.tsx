@@ -11,8 +11,8 @@ interface Pattern {
     [key: string]: boolean[][];
 }
 
-const numRows = 20;
-const numCols = 40;
+const numRows = 40;
+const numCols = 80;
 
 const generateEmptyGrid = () => {
     return Array.from({ length: numRows }).map(() => Array.from({ length: numCols }, () => false));
@@ -31,22 +31,39 @@ const patterns: Pattern = {
     ]
 }
 
+const generateGridFromPattern = (pattern: boolean[][]) => {
+    const newGrid = generateEmptyGrid();
+    // Génère un pattern au centre de la grille
+    const startRow = Math.floor((numRows - pattern.length) / 2);
+    const startCol = Math.floor((numCols - pattern[0].length) / 2);
+
+    for (let i = 0; i < pattern.length; i++) {
+        for (let j = 0; j < pattern[i].length; j++) {
+            newGrid[startRow + i][startCol + j] = pattern[i][j];
+        }
+    }
+    return newGrid;
+}
+
 const App: React.FC = () => {
     // Exemple initial de grille
     const [currentGrid, setCurrentGrid] = useState<boolean[][]>(patterns.empty);
     const [running, setRunning] = useState<boolean>(false);
     const [intervalMs, setIntervalMs] = useState<number>(1000);
     const [generationCount, setGenerationCount] = useState<number>(0);
+    const [selectedPatternKey, setSelectedPatternKey] = useState<string>("empty");
 
     // Calcul de générations par seconde
     const generationsPerSecond = 1000 / intervalMs;
 
+    // Handle pour modifier la durée de la simulation
     const handleChangeSpeed = (values: number[]) => {
         const value = values[0];
         const newIntervalMs = 2000 - 19 * value;
         setIntervalMs(newIntervalMs);
     };
 
+    // Permet l'activation/désactivation d'une cellule au clic
     const toggleCellState = (row: number, col: number) => {
 
         setCurrentGrid(currentGrid => {
@@ -68,10 +85,16 @@ const App: React.FC = () => {
 
     }
 
+    // Réinitialiation de la grille selon le pattern sélectionné
     const resetGrid = () => {
         setRunning(false);
         setGenerationCount(0);
-        setCurrentGrid(generateEmptyGrid);
+        if (selectedPatternKey && patterns[selectedPatternKey]) {
+            const newGrid = generateGridFromPattern(patterns[selectedPatternKey]);
+            setCurrentGrid(newGrid);
+        } else {
+            setCurrentGrid(generateEmptyGrid()); // Fallback si aucun pattern n'est sélectionné
+        }
     }
 
     const computeNextGrid = useCallback(() => {
@@ -127,19 +150,11 @@ const App: React.FC = () => {
             return; // Sortie anticipée si le motif n'est pas trouvé
         }
 
-        const newGrid = generateEmptyGrid();
-        const startRow = Math.floor((numRows - pattern.length) / 2);
-        const startCol = Math.floor((numCols - pattern[0].length) / 2);
-
-        for (let i = 0; i < pattern.length; i++) {
-            for (let j = 0; j < pattern[i].length; j++) {
-                newGrid[startRow + i][startCol + j] = pattern[i][j];
-            }
-        }
-
+        const newGrid = generateGridFromPattern(pattern);
         setCurrentGrid(newGrid);
         setRunning(false);
         setGenerationCount(0);
+        setSelectedPatternKey(patternKey); // Mise à jour de l'état du pattern sélectionné
     }
 
     return (
@@ -154,7 +169,7 @@ const App: React.FC = () => {
             </Button>
             <Select onValueChange={(value) => handleSelectPattern(value)}>
                 <SelectTrigger className="w-[100px]">
-                    <SelectValue placeholder="Select a pattern" />
+                    <SelectValue placeholder="Select a pattern"/>
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
