@@ -77,3 +77,9 @@ export const parseToRLE = (grid: PatternType): { rleString: string, width: numbe
     "2o11bo$22bo13bo$13bo6b2o10b2obo$11b2o7bo11b2o$11bo$11b3o2$21b2o$21b2o!", 38, 19);
 
 console.log(P384);*/
+
+
+const gosperGliderGun =
+    parseFromRLE('24bo11b$22bobo11b$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o14b$2o8bo3bob2o4bobo11b$10bo5bo7bo11b$11bo3bo20b$12b2o!', 36, 9);
+
+console.log(gosperGliderGun);

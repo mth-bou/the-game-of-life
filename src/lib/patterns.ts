@@ -261,8 +261,101 @@ export const getPatterns = (): Patterns => {
                 [false, true, true, true, true, true, true]
             ],
         },
-        /*mathusalems: [],
-        puffers: [],
-        guns: [],*/
+        mathusalems: {},
+        puffers: {},
+        guns: {
+            gosperGliderGun: [
+                [
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, true,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false
+                ],
+                [
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, true,  false, true,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false
+                ],
+                [
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, true,  true,  false,
+                    false, false, false, false, false,
+                    true,  true,  false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, true,
+                    true
+                ],
+                [
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, true,  false, false, false,
+                    true,  false, false, false, false,
+                    true,  true,  false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, true,
+                    true
+                ],
+                [
+                    true,  true,  false, false, false,
+                    false, false, false, false, false,
+                    true,  false, false, false, false,
+                    false, true,  false, false, false,
+                    true,  true,  false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false
+                ],
+                [
+                    true,  true,  false, false, false,
+                    false, false, false, false, false,
+                    true,  false, false, false, true,
+                    false, true,  true,  false, false,
+                    false, false, true,  false, true,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false
+                ],
+                [
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    true,  false, false, false, false,
+                    false, true,  false, false, false,
+                    false, false, false, false, true,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false
+                ],
+                [
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, true,  false, false, false,
+                    true,  false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false
+                ],
+                [
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, true,  true,  false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false, false, false, false, false,
+                    false
+                ]
+            ]
+        },
     }
 };
