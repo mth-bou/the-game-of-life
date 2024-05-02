@@ -19,7 +19,7 @@ const SetSimulationSpeedSlider = ({ onValueChange, className, ...props }: SetSim
             defaultValue={[0]} // Démarre à 1 gén/sec, donc slider à 0
             max={100} step={1}
             onValueChange={handleChange}
-            className={cn("w-[15%]", className)}
+            className={cn("w-[200px]", className)}
             {...props}
         />
     );

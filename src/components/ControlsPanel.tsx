@@ -17,15 +17,23 @@ const ControlsPanel = ({
    running, setRunning, resetGrid, onSelectPattern, handleChangeSpeed, generationsPerSecond, generationCount
 } : ControlsPanelProps) => {
     return (
-        <div className="w-full flex justify-center items-center gap-3 m-1">
-            <Button size="sm" onClick={() => setRunning(!running)}>
-                {running ? 'Stop' : 'Start'}
-            </Button>
-            <Button size="sm" onClick={resetGrid}>Reset</Button>
-            <PatternSelector onSelectPattern={onSelectPattern}/>
-            <SetSimulationSpeedSlider onValueChange={handleChangeSpeed}/>
-            <div>Vitesse : {generationsPerSecond.toFixed(2)} générations/s</div>
-            <div>Génération : {generationCount}</div>
+        <div className="w-full flex space-x-20 items-center gap-5 m-1 absolute z-10 py-2 px-5">
+            <div className="flex gap-5">
+                <Button size="sm" onClick={() => setRunning(!running)}>
+                    {running ? 'Stop' : 'Start'}
+                </Button>
+                <Button size="sm" onClick={resetGrid}>Reset</Button>
+                <PatternSelector onSelectPattern={onSelectPattern}/>
+                <SetSimulationSpeedSlider onValueChange={handleChangeSpeed}/>
+            </div>
+            <div className="flex gap-5">
+                <div>
+                    <p className="text-white">Vitesse : {generationsPerSecond.toFixed(2)} générations/s</p>
+                </div>
+                <div>
+                    <p className="text-white">Génération : {generationCount}</p>
+                </div>
+            </div>
         </div>
     );
 };

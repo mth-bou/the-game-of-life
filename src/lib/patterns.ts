@@ -4,11 +4,11 @@ type Cell = {
     [key: string]: boolean[][];
 }
 
-export interface CellPattern {
+export interface ArrayCellPattern {
     [category: string]: Cell;
 }
 
-export const getPatterns = (): CellPattern => {
+export const getPatterns = (): ArrayCellPattern => {
     return {
         initial: {
             empty: generateEmptyGrid()

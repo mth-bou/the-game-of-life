@@ -1,11 +1,11 @@
 
-interface StringSetPatterns {
+interface StringSetCellPatterns {
     [category: string]: {
         [patternName: string]: Set<string>;
     };
 }
 
-export const stringSetPatterns: StringSetPatterns = {
+export const patterns: StringSetCellPatterns = {
     stables: {
         block: new Set(['0,0', '1,0', '0,1', '1,1']),
         beehive: new Set(['1,0', '2,0', '0,1', '3,1', '1,2', '2,2']),
