@@ -1,14 +1,14 @@
 import { generateEmptyGrid } from "@/utils/gridUtils";
 
-export interface Pattern {
+type Cell = {
     [key: string]: boolean[][];
 }
 
-export interface Patterns {
-    [category: string]: Pattern;
+export interface CellPattern {
+    [category: string]: Cell;
 }
 
-export const getPatterns = (): Patterns => {
+export const getPatterns = (): CellPattern => {
     return {
         initial: {
             empty: generateEmptyGrid()

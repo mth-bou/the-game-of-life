@@ -3,23 +3,10 @@
 
 import { Stage, Layer, Rect, Line } from 'react-konva';
 import React, { memo } from "react";
-import { KonvaEventObject } from "konva/lib/Node";
 import { useGridContext } from "@/context/GridContext";
 
 // taille initiale d'une cellule en pixels
 const cellSize = 40;
-
-type Cell = string;  // Format "x,y"
-export type LiveCells = Set<Cell>;
-
-/*type GridCanvasProps = {
-    liveCells: LiveCells;
-    scale: number;
-    offsetX: number | undefined;
-    offsetY: number | undefined;
-    handleWheel: (event: KonvaEventObject<WheelEvent>) => void;
-    handleDragEnd: (event: any) => void;
-};*/
 
 const GridCanvas = memo(() => {
 

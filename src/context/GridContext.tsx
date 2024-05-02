@@ -1,6 +1,8 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { KonvaEventObject } from "konva/lib/Node";
-import { LiveCells } from "@/components/GridCanvas";
+
+type Cell = string;  // Format "x,y"
+export type LiveCells = Set<Cell>;
 
 interface GridContextType {
     liveCells: LiveCells;

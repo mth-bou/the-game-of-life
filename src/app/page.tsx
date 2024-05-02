@@ -5,7 +5,7 @@ import "./../../public/app.css";
 import useGrid from "@/hooks/useGrid";
 import useSimulationTimer from "@/hooks/useSimulationTimer";
 import ControlsPanel from "@/components/ControlsPanel";
-import GridCanvas, { LiveCells } from "@/components/GridCanvas";
+import GridCanvas from "@/components/GridCanvas";
 import { GridProvider } from "@/context/GridContext";
 import { calculateIntervalSpeed } from "@/utils/gridUtils";
 
