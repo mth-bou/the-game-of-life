@@ -1,8 +1,7 @@
 // WORK IN PROGRESS
 // USES KONVA.JS TO DRAW THE GRID
-
 import { Stage, Layer, Rect, Line } from 'react-konva';
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useGridContext } from "@/context/GridContext";
 
 // taille initiale d'une cellule en pixels
@@ -11,9 +10,19 @@ const cellSize = 40;
 const GridCanvas = memo(() => {
 
     const { liveCells, scale, offsetX, offsetY, handleWheel, handleDragEnd } = useGridContext();
+    const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
 
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    // Vérification que la variable globale window est définie car elle n'est pas disponible côté serveur
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setWindowDimensions({
+                width: window.innerWidth,
+                height: window.innerHeight
+            });
+        }
+    }, []);
+
+    const { width: windowWidth, height: windowHeight } = windowDimensions;
 
     // S'assurer que le fond couvre même les zones dézoomées/déplacées
     const extraPadding = 2000; // Ajouter un padding pour couvrir les zones au-delà de l'écran
