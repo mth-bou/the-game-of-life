@@ -1,7 +1,9 @@
 type PatternType = boolean[][];
 
-// This function parses a RLE string and returns a 2D array of booleans
-// RLE format: https://www.conwaylife.com/wiki/Run_Length_Encoded
+/*
+ * This function parses a RLE string and returns a 2D array of booleans
+ * RLE format: https://www.conwaylife.com/wiki/Run_Length_Encoded
+ */
 export const parseFromRLE = (rleString: string, width: number, height: number): PatternType => {
     const grid: PatternType = Array.from({ length: height }, () => Array(width).fill(false));
     let x = 0, y = 0;
@@ -34,6 +36,9 @@ export const parseFromRLE = (rleString: string, width: number, height: number): 
     return grid;
 };
 
+/*
+ * This function takes a 2D array of booleans and returns a RLE string
+ */
 export const parseToRLE = (grid: PatternType): { rleString: string, width: number, height: number } => {
     let rleString = '';
     let count = 0;
@@ -73,6 +78,10 @@ export const parseToRLE = (grid: PatternType): { rleString: string, width: numbe
     }
 }
 
+/*
+ * Usage examples
+ * command : npx tsc ./src/utils/parseRLE.ts && node ./src/utils/parseRLE.js
+ */
 /*const P384 = parseFromRLE("15b2o$15b2o3$14bo$4b2o8bo$2bob2o8bo$bo$4bo31b2o$2obo16bo13bob2o$2o18b\n" +
     "2o11bo$22bo13bo$13bo6b2o10b2obo$11b2o7bo11b2o$11bo$11b3o2$21b2o$21b2o!", 38, 19);
 
