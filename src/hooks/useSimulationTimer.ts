@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-const useSimulationTimer = (callback: Function, intervalMs: number) => {
+type SimulationCallback = () => void;
+
+const useSimulationTimer = (callback: SimulationCallback, intervalMs: number) => {
     const [running, setRunning] = useState(false);
 
     useEffect(() => {

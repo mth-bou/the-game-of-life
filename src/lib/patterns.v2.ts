@@ -6,6 +6,9 @@ interface StringSetCellPatterns {
 }
 
 export const patterns: StringSetCellPatterns = {
+    initial: {
+        empty: new Set(),
+    },
     stables: {
         block: new Set(['0,0', '1,0', '0,1', '1,1']),
         beehive: new Set(['1,0', '2,0', '0,1', '3,1', '1,2', '2,2']),

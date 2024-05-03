@@ -2,27 +2,35 @@
 
 import React, { useState } from "react";
 import "./../../public/app.css";
-import useGrid from "@/hooks/useGrid";
+import useGrid from "@/hooks/useGrid.v2";
 import useSimulationTimer from "@/hooks/useSimulationTimer";
 import ControlsPanel from "@/components/ControlsPanel";
 import GridCanvas from "@/components/GridCanvas";
-import { GridProvider } from "@/context/GridContext";
+import { GridProvider, useGridContext } from "@/context/GridContext";
 import { calculateIntervalSpeed } from "@/utils/gridUtils";
 
 
 const App: React.FC = () => {
+    return (
+        <GridProvider>
+            <MainApp />
+        </GridProvider>
+    );
+};
 
-    // A l'état initial, la simulation a une durée de 1 génération / seconde
-    const [intervalMs, setIntervalMs] = useState<number>(1000);
+
+const MainApp = () => {
+
     const {
-        grid,
-        toggleCellState,
-        resetGrid,
-        computeNextGrid,
+        running,
+        setRunning,
         generationCount,
-        handleSelectPattern
-    } = useGrid('empty');
-    const { running, setRunning } = useSimulationTimer(computeNextGrid, intervalMs);
+        intervalMs,
+        setIntervalMs,
+        resetGrid,
+        handleSelectPattern,
+        simulateNextGeneration
+    } = useGridContext();
 
     // Calcul de générations par seconde
     const generationsPerSecond = 1000 / intervalMs;
@@ -35,21 +43,19 @@ const App: React.FC = () => {
     };
 
     return (
-        <GridProvider>
-            <div>
-                <ControlsPanel
-                    running={running}
-                    setRunning={setRunning}
-                    resetGrid={resetGrid}
-                    onSelectPattern={handleSelectPattern}
-                    handleChangeSpeed={handleChangeSpeed}
-                    generationsPerSecond={generationsPerSecond}
-                    generationCount={generationCount}
-                />
-                {/*<Grid grid={grid} toggleCellState={toggleCellState}/>*/}
-                <GridCanvas/>
-            </div>
-        </GridProvider>
+        <div>
+            <ControlsPanel
+                running={running}
+                setRunning={setRunning}
+                resetGrid={resetGrid}
+                onSelectPattern={handleSelectPattern}
+                handleChangeSpeed={handleChangeSpeed}
+                generationsPerSecond={generationsPerSecond}
+                generationCount={generationCount}
+            />
+            {/*<Grid grid={grid} toggleCellState={toggleCellState}/>*/}
+            <GridCanvas/>
+        </div>
     );
 }
 

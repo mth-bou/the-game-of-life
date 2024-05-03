@@ -4,13 +4,13 @@ import { Stage, Layer, Rect, Line } from 'react-konva';
 import React, { memo, useEffect, useState } from "react";
 import { useGridContext } from "@/context/GridContext";
 
-// taille initiale d'une cellule en pixels
-const cellSize = 40;
-
 const GridCanvas = memo(() => {
 
     const { liveCells, scale, offsetX, offsetY, handleWheel, handleDragEnd } = useGridContext();
     const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
+
+    // taille initiale d'une cellule en pixels
+    const cellSize = 40;
 
     // Vérification que la variable globale window est définie car elle n'est pas disponible côté serveur
     useEffect(() => {
@@ -23,6 +23,10 @@ const GridCanvas = memo(() => {
     }, []);
 
     const { width: windowWidth, height: windowHeight } = windowDimensions;
+
+    // Calculer le centre de la fenêtre pour positionner les patterns
+    const centerX = Math.floor((windowWidth / 2 - offsetX) / (cellSize * scale));
+    const centerY = Math.floor((windowHeight / 2 - offsetY) / (cellSize * scale));
 
     // S'assurer que le fond couvre même les zones dézoomées/déplacées
     const extraPadding = 2000; // Ajouter un padding pour couvrir les zones au-delà de l'écran
@@ -64,7 +68,7 @@ const GridCanvas = memo(() => {
                     <Line
                         key={`v-${x}`}
                         points={[x, startY, x, startY + numCellsHigh * cellSize]}
-                        stroke="#6c6c6c"
+                        stroke="#d2d2d2"
                         strokeWidth={0.5 / scale} // Ajustez l'épaisseur en fonction du zoom
                     />
                 ))}
@@ -73,18 +77,22 @@ const GridCanvas = memo(() => {
                     <Line
                         key={`h-${y}`}
                         points={[startX, y, startX + numCellsWide * cellSize, y]}
-                        stroke="#9d9d9d"
+                        stroke="#d2d2d2"
                         strokeWidth={0.5 / scale} // Ajustez l'épaisseur en fonction du zoom
                     />
                 ))}
                 {/* Cellules vivantes */}
                 {Array.from(liveCells).map((cell, i) => {
                     const [x, y] = cell.split(',').map(Number);
+                    // Adjust x and y to be centered
+                    const adjustedX = (x - centerX) * cellSize;
+                    const adjustedY = (y - centerY) * cellSize;
+
                     return (
                         <Rect
                             key={i}
-                            x={x * cellSize}
-                            y={y * cellSize}
+                            x={adjustedX}
+                            y={adjustedY}
                             width={cellSize}
                             height={cellSize}
                             fill="#eeeeee"
